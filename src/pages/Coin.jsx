@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { CoinContext } from "../context/CoinContext";
-import { LineChart } from "../components";
+import { LineChart, Loader } from "../components";
 import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 
 const Coin = () => {
@@ -87,7 +87,7 @@ const Coin = () => {
 
   return (
     <div className="my-10">
-      {loading && <div className="text-center">Loading...</div>}
+      {loading && <Loader />}
       {error && <div className="text-red-700 text-center">{error}</div>}
 
       {/* coin info */}
@@ -107,7 +107,7 @@ const Coin = () => {
               <p className="text-red-700 tex-center">{chartError}</p>
             )}
             {chartLoading && (
-              <div className="text-center text-green-300">Loading...</div>
+            <Loader />
             )}
             {!chartLoading && !chartError && chartData && (
               <div className="flex flex-col gap-4 my-10">
@@ -116,7 +116,7 @@ const Coin = () => {
                 </div>
                 <div className="flex flex-row gap-4 flex-noWrap justify-center items-center">
                   <button
-                    className="bg-gray-400 px-4 py-2 rounded-xl disabled:cursor-not-allowed"
+                    className="bg-gray-600 px-4 py-2 rounded-xl disabled:cursor-not-allowed"
                     disabled={loading || chartLoading}
                     onClick={handleDaysChange}
                     value={7}
@@ -125,7 +125,7 @@ const Coin = () => {
                   </button>
                   <button
                     disabled={loading || chartLoading}
-                    className="bg-gray-400 px-4 py-2 rounded-xl disabled:cursor-not-allowed"
+                    className="bg-gray-700 px-4 py-2 rounded-xl disabled:cursor-not-allowed"
                     onClick={handleDaysChange}
                     value={30}
                   >
@@ -133,7 +133,7 @@ const Coin = () => {
                   </button>
                   <button
                     disabled={loading || chartLoading}
-                    className="bg-gray-400 px-4 py-2 rounded-xl disabled:cursor-not-allowed"
+                    className="bg-gray-800 px-4 py-2 rounded-xl disabled:cursor-not-allowed"
                     value={90}
                     onClick={handleDaysChange}
                   >
@@ -198,7 +198,7 @@ const Coin = () => {
                 </h1>
                 <p
                   className="max-w-5xl text-center mx-auto text-gray-300"
-                  dangerouslySetInnerHTML={{ __html: data.description.en.lenght > 0 ? data.description.en.lenght : 'No description available' }}
+                  dangerouslySetInnerHTML={{ __html: data.description.en.length > 0 ? data.description.en : 'No description available' }}
                 ></p>
               </div>
             </div>
