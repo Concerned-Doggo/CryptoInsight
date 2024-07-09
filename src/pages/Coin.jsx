@@ -8,6 +8,7 @@ const Coin = () => {
   const { currency } = useContext(CoinContext);
   const [data, setData] = useState("");
   const [historicalData, setHistoricalData] = useState([]);
+  const [chartData, setChartData] = useState([]);
   const [days, setDays] = useState("10");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -47,7 +48,7 @@ const Coin = () => {
       setChartLoading(true);
       setChartError(false);
       const res = await fetch(
-        `https://api.coingecko.com/api/v3/coins/${coinId.toLowerCase()}/market_chart?vs_currency=${currency.name}&days=${days}`,
+        `https://api.coingecko.com/api/v3/coins/${coinId.toLowerCase()}/market_chart?vs_currency=${currency.name}&days=90&interval=daily`,
         {
           method: "GET",
           headers: {
@@ -58,7 +59,8 @@ const Coin = () => {
       );
       const fetchedHistoricalData = await res.json();
       setHistoricalData(fetchedHistoricalData);
-      console.log(fetchedHistoricalData);
+      setChartData(fetchedHistoricalData.prices);
+
       if (fetchedHistoricalData.success === false) {
         setChartError(fetchedHistoricalData.message);
         return;
@@ -72,12 +74,17 @@ const Coin = () => {
   };
 
   useEffect(() => {
-    if (data === "") {
-      fetchData();
-      console.log("called");
-    }
+    fetchData();
     fetchHistoricalData();
-  }, [coinId, days]);
+  }, [coinId]);
+
+  const handleDaysChange = (e) => {
+    setDays(e.target.value);
+        const dataCopy = historicalData.prices.slice(0, e.target.value);
+        console.log('d', dataCopy)
+        setChartData(dataCopy);
+  };
+
   return (
     <div className="my-10">
       {loading && <div className="text-center">Loading...</div>}
@@ -107,33 +114,35 @@ const Coin = () => {
             <div className="text-center text-green-300">Loading...</div>
           )}
 
-
-          {!chartLoading && !chartError && (
+          {!chartLoading && !chartError && chartData && (
             <div>
               <div>
-                <LineChart historicalData={historicalData} />
+                <LineChart chartData={chartData} days={days} />
               </div>
               <div className="flex flex-row gap-4 flex-noWrap">
                 <button
                   className="bg-gray-400 px-4 py-2 rounded-xl disabled:cursor-not-allowed"
                   disabled={loading || chartLoading}
-                  onClick={() => setDays(1)}
-                >
-                  1 Day
-                </button>
-                <button
-                  disabled={loading || chartLoading}
-                  className="bg-gray-400 px-4 py-2 rounded-xl disabled:cursor-not-allowed"
-                  onClick={() => setDays(7)}
+                  onClick={handleDaysChange}
+                  value={7}
                 >
                   7 Days
                 </button>
                 <button
                   disabled={loading || chartLoading}
                   className="bg-gray-400 px-4 py-2 rounded-xl disabled:cursor-not-allowed"
-                  onClick={() => setDays(30)}
+                  onClick={handleDaysChange}
+                  value={30}
                 >
                   30 Days
+                </button>
+                <button
+                  disabled={loading || chartLoading}
+                  className="bg-gray-400 px-4 py-2 rounded-xl disabled:cursor-not-allowed"
+                  value={90}
+                  onClick={handleDaysChange}
+                >
+                  90 Days
                 </button>
               </div>
             </div>

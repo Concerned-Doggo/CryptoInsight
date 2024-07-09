@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
 import Chart from "react-google-charts";
 
-const LineChart = ({ historicalData }) => {
+const LineChart = ({  chartData }) => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
+        console.log('c', chartData)
         let dataCopy = [["Date", "Prices"]];
-        if(historicalData.prices){
-            historicalData.prices.map((item) => {
-                dataCopy.push([new Date(item[0]).toLocaleDateString().slice(0, -5), item[1]]);
+        if(chartData){
+            chartData.map((item) => {
+                dataCopy.push([new Date(item[0]).toLocaleDateString(), item[1]]);
             })
         }
         setData(dataCopy)
-    }, [historicalData]);
+    }, [chartData]);
 
   return (
     <Chart
