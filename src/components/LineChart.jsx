@@ -5,7 +5,6 @@ const LineChart = ({ chartData }) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    console.log("c", chartData);
     let dataCopy = [["Date", "Prices"]];
     if (chartData) {
       chartData.map((item) => {

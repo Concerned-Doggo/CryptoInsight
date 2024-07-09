@@ -44,7 +44,6 @@ const Coin = () => {
     }
   };
 
-  console.log(data);
   const fetchHistoricalData = async () => {
     try {
       setChartLoading(true);
@@ -83,7 +82,6 @@ const Coin = () => {
   const handleDaysChange = (e) => {
     setDays(e.target.value);
     const dataCopy = historicalData.prices.slice(0, e.target.value);
-    console.log("d", dataCopy);
     setChartData(dataCopy);
   };
 
