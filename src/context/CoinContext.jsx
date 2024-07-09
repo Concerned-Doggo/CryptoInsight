@@ -8,7 +8,6 @@ const CoinContextProvider = (props) => {
     name: "INR",
     symbol: "₹",
   });
-  const [categories, setCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
   const fetchAllCoin = async () => {
@@ -30,25 +29,6 @@ const CoinContextProvider = (props) => {
     }
   };
 
-  const fetchCategories = async () => {
-    try {
-      const res = await fetch(
-        "https://api.coingecko.com/api/v3/coins/categories/list",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "x-cg-demo-api-key": import.meta.env.VITE_COIN_GECKO_API_KEY,
-          },
-        },
-      );
-      const data = await res.json();
-      setCategories(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
     fetchAllCoin();
   }, [currency]);
@@ -57,8 +37,6 @@ const CoinContextProvider = (props) => {
     allCoins,
     currency,
     setCurrency,
-    fetchCategories,
-    categories,
     setSearchTerm,
     searchTerm,
   };

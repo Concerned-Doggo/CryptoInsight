@@ -15,9 +15,7 @@ const Search = () => {
     const { allCoins, setSearchTerm, searchTerm } = useContext(CoinContext);
 
     useEffect(() => {
-        setDisplayCoins(allCoins.filter((coin) => {
-            return coin.name.toLowerCase().includes(query.searchTerm.toLowerCase());
-        }));
+        handleSubmit();
     }, [allCoins]);
 
     const handleChange = (e) => {

@@ -115,11 +115,11 @@ const Coin = () => {
           )}
 
           {!chartLoading && !chartError && chartData && (
-            <div>
+            <div className="flex flex-col gap-4 mx-auto p-4">
               <div>
                 <LineChart chartData={chartData} days={days} />
               </div>
-              <div className="flex flex-row gap-4 flex-noWrap">
+              <div className="flex flex-row gap-4 flex-noWrap justify-center items-center">
                 <button
                   className="bg-gray-400 px-4 py-2 rounded-xl disabled:cursor-not-allowed"
                   disabled={loading || chartLoading}

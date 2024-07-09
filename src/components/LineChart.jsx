@@ -1,34 +1,46 @@
 import React, { useEffect, useState } from "react";
 import Chart from "react-google-charts";
 
-const LineChart = ({  chartData }) => {
-    const [data, setData] = useState([]);
+const LineChart = ({ chartData }) => {
+  const [data, setData] = useState([]);
 
-    useEffect(() => {
-        console.log('c', chartData)
-        let dataCopy = [["Date", "Prices"]];
-        if(chartData){
-            chartData.map((item) => {
-                dataCopy.push([new Date(item[0]).toLocaleDateString(), item[1]]);
-            })
-        }
-        setData(dataCopy)
-    }, [chartData]);
+  useEffect(() => {
+    console.log("c", chartData);
+    let dataCopy = [["Date", "Prices"]];
+    if (chartData) {
+      chartData.map((item) => {
+        dataCopy.push([new Date(item[0]).toLocaleDateString().slice(0, -5), item[1]]);
+      });
+    }
+    setData(dataCopy);
+  }, [chartData]);
+
+
+  const color = "#FFF";
+  const options = {
+        colors: ['cyan' ,'green'],
+    legend: {
+            textStyle: { color:color , bold: true},
+    },
+    backgroundColor: {
+      fillOpacity: 0.0,
+    },
+    hAxis: {
+      title: "Date",
+    },
+    vAxis: {
+      title: "Price",
+    },
+    vAxis: {
+      textStyle: { color: color },
+    },
+    hAxis: {
+      textStyle: { color: color },
+    },
+  };
 
   return (
-    <Chart
-      chartType="LineChart"
-      height="100%"
-      width={"80%"}
-      data={data}
-      legendToggle
-      options={{
-        colors: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
-        backgroundColor: {
-          fillOpacity: 0.0,
-        },
-      }}
-    />
+    <Chart chartType="LineChart" data={data} options={options} legendToggle />
   );
 };
 
