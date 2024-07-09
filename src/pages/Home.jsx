@@ -6,11 +6,21 @@ const Home = () => {
 
     const {allCoins, currency} = useContext(CoinContext)
     const [displayCoins, setDisplayCoins] = useState([]);
+    const [index, setIndex] = useState(0);
+    const limit = allCoins.length;
 
     useEffect(() => {
         setDisplayCoins(allCoins);
+        setIndex(10);
     }, [allCoins]);
 
+    const handleShowMore = () => {
+        let newData = [];
+        newData = allCoins.slice(0, index + 10);
+        setIndex(index + 10);
+        setDisplayCoins(newData);
+        
+    }
 
 
   return (
@@ -40,11 +50,13 @@ const Home = () => {
           <p className="text-right pr-4 hidden md:block ">Market Cap</p>
         </div>
                 {
-                    displayCoins.slice(0, 10).map((coin, index) => (
+                    displayCoins.slice(0, index).map((coin, index) => (
                         <CoinListing key={index} coin={coin} />
                     ))
                 }
       </div>
+
+            {(index < limit) &&<p className="hover:underline text-center mt-10 text-slate-500 cursor-pointer" onClick={handleShowMore}>Show More...</p> }
     </div>
   );
 };

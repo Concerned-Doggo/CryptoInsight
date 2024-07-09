@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { CoinContext } from "../context/CoinContext";
 import { LineChart } from "../components";
+import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 
 const Coin = () => {
   const { coinId } = useParams();
@@ -43,6 +44,7 @@ const Coin = () => {
     }
   };
 
+  console.log(data);
   const fetchHistoricalData = async () => {
     try {
       setChartLoading(true);
@@ -80,9 +82,9 @@ const Coin = () => {
 
   const handleDaysChange = (e) => {
     setDays(e.target.value);
-        const dataCopy = historicalData.prices.slice(0, e.target.value);
-        console.log('d', dataCopy)
-        setChartData(dataCopy);
+    const dataCopy = historicalData.prices.slice(0, e.target.value);
+    console.log("d", dataCopy);
+    setChartData(dataCopy);
   };
 
   return (
@@ -93,60 +95,116 @@ const Coin = () => {
       {/* coin info */}
       {!loading && !error && (
         <div>
-          <div className="flex mx-10 flex-col gap-4">
+          <div className="flex mx-5 flex-col gap-4">
             <div className="flex flex-col gap-4 items-center justify-center">
-              <img src={data.image.large} />
+              <img src={data.image.small} className="md:hidden" />
+              <img src={data.image.large} className="hidden md:block" />
               <h1 className="text-3xl font-bold">
                 {data.name} - ({data.symbol})
               </h1>
             </div>
-            <p
-              className="max-w-5xl text-center mx-auto text-gray-300"
-              dangerouslySetInnerHTML={{ __html: data.description.en }}
-            ></p>
-          </div>
 
-          {/* chart */}
-          {chartError && (
-            <p className="text-red-700 tex-center">{chartError}</p>
-          )}
-          {chartLoading && (
-            <div className="text-center text-green-300">Loading...</div>
-          )}
-
-          {!chartLoading && !chartError && chartData && (
-            <div className="flex flex-col gap-4 mx-auto p-4">
-              <div>
-                <LineChart chartData={chartData} days={days} />
+            {/* chart */}
+            {chartError && (
+              <p className="text-red-700 tex-center">{chartError}</p>
+            )}
+            {chartLoading && (
+              <div className="text-center text-green-300">Loading...</div>
+            )}
+            {!chartLoading && !chartError && chartData && (
+              <div className="flex flex-col gap-4 my-10">
+                <div>
+                  <LineChart chartData={chartData} days={days} />
+                </div>
+                <div className="flex flex-row gap-4 flex-noWrap justify-center items-center">
+                  <button
+                    className="bg-gray-400 px-4 py-2 rounded-xl disabled:cursor-not-allowed"
+                    disabled={loading || chartLoading}
+                    onClick={handleDaysChange}
+                    value={7}
+                  >
+                    7 Days
+                  </button>
+                  <button
+                    disabled={loading || chartLoading}
+                    className="bg-gray-400 px-4 py-2 rounded-xl disabled:cursor-not-allowed"
+                    onClick={handleDaysChange}
+                    value={30}
+                  >
+                    30 Days
+                  </button>
+                  <button
+                    disabled={loading || chartLoading}
+                    className="bg-gray-400 px-4 py-2 rounded-xl disabled:cursor-not-allowed"
+                    value={90}
+                    onClick={handleDaysChange}
+                  >
+                    90 Days
+                  </button>
+                </div>
               </div>
-              <div className="flex flex-row gap-4 flex-noWrap justify-center items-center">
-                <button
-                  className="bg-gray-400 px-4 py-2 rounded-xl disabled:cursor-not-allowed"
-                  disabled={loading || chartLoading}
-                  onClick={handleDaysChange}
-                  value={7}
-                >
-                  7 Days
-                </button>
-                <button
-                  disabled={loading || chartLoading}
-                  className="bg-gray-400 px-4 py-2 rounded-xl disabled:cursor-not-allowed"
-                  onClick={handleDaysChange}
-                  value={30}
-                >
-                  30 Days
-                </button>
-                <button
-                  disabled={loading || chartLoading}
-                  className="bg-gray-400 px-4 py-2 rounded-xl disabled:cursor-not-allowed"
-                  value={90}
-                  onClick={handleDaysChange}
-                >
-                  90 Days
-                </button>
+            )}
+            <div className="flex flex-col md:flex-row gap-4 justify-center my-8">
+              <div className="flex flex-col flex-nowrap gap-4 items-center justify-center text-center">
+                <ul className="border-b-2 border-gray-200 w-full p-2">
+                  <li>Crypto Market Rank</li>
+                  <li className="font-bold"># {data.market_cap_rank}</li>
+                </ul>
+                <ul className="border-b-2 border-gray-300 w-full p-2">
+                  <li>Current Price</li>
+                  <li>
+                    {currency.symbol}{" "}
+                    {data.market_data.current_price[
+                      currency.name.toLowerCase()
+                    ].toLocaleString()}{" "}
+                    /-
+                  </li>
+                </ul>
+                <ul className="border-b-2 border-gray-400  justify-center w-full p-2 text-center">
+                  <li>Market Cap</li>
+                  <li className="flex gap-2 text-center justify-center">
+                    {currency.symbol}{" "}
+                    {data.market_data.market_cap[
+                      currency.name.toLowerCase()
+                    ].toLocaleString()}{" "}
+                    /-
+                  </li>
+                </ul>
+
+                <ul className="text-red-500 border-b-2  justify-center  border-gray-500 w-full p-2">
+                  <li>24H Lowest Value</li>
+                  <li className="flex gap-2 items-center justify-center">
+                    <FaArrowDown />
+                    {currency.symbol}{" "}
+                    {data.market_data.low_24h[
+                      currency.name.toLowerCase()
+                    ].toLocaleString()}{" "}
+                    /-
+                  </li>
+                </ul>
+                <ul className="text-green-500 border-b-2 border-gray-600 w-full p-2">
+                  <li>24H Highest Value</li>
+                  <li className="flex gap-2 items-center justify-center">
+                    <FaArrowUp />
+                    {currency.symbol}{" "}
+                    {data.market_data.high_24h[
+                      currency.name.toLowerCase()
+                    ].toLocaleString()}{" "}
+                    /-
+                  </li>
+                </ul>
+              </div>
+              <div className=" text-center flex flex-col flex-nowrap gap-4 items-center justify-center md:border-l-2 md:border-gray-300 border-none max-w-4xl p-6">
+                <h1 className="text-3xl font-bold">
+                  About <span className="text-gray-400">{data.name}</span>
+                </h1>
+                <p
+                  className="max-w-5xl text-center mx-auto text-gray-300"
+                  dangerouslySetInnerHTML={{ __html: data.description.en.lenght > 0 ? data.description.en.lenght : 'No description available' }}
+                ></p>
               </div>
             </div>
-          )}
+          </div>
         </div>
       )}
     </div>
